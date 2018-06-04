@@ -38,7 +38,7 @@ class AppStatistics  {
     fun getClicks() = videoClicks + webViewClicks
     fun getInstalls() = videoInstalls + webViewInstalls
 
-    fun getPersianYear() = DateUtility.getJalaliYearOf(reportTime!!)
-    fun getPersianWeek() = DateUtility.getJalaliMonthOf(reportTime!!)
+    fun getPersianYear() = DateUtility.getJalaliYearOf(reportTime)
+    fun getPersianWeek() = DateUtility.getJalaliMonthOf(reportTime)
 
 }
