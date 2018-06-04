@@ -2,11 +2,10 @@ package ir.imrasta.appstat
 
 import ir.imrasta.appstat.appstatistics.AppStatistics
 import ir.imrasta.appstat.appstatistics.AppStatisticsRepository
-import ir.imrasta.appstat.util.DateUtility
+import ir.imrasta.util.DateUtility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.cache.annotation.EnableCaching
 import javax.annotation.PostConstruct
 
 @SpringBootApplication
