@@ -22,29 +22,16 @@ class AppStatisticsService {
                  @RequestParam(defaultValue = "2016-03-20") @DateTimeFormat(pattern = "yyyy-MM-dd") startDate : Date ,
                  @DateTimeFormat(pattern = "yyyy-MM-dd") endDate : Date? ): List<AppStatisticsModel> {
 
-        val modelList = grouping(
-                appStatisticsRepository.findByTypeAndReportTimeBetween(type, startDate, DateUtility.getMidNightTime(endDate ?: Date()))
-        )
-        Collections.sort(modelList)
-        return modelList
+        return groupingAndSort(appStatisticsRepository.findByTypeAndReportTimeBetween(type, startDate, DateUtility.getMidNightTime(endDate ?: Date())));
     }
 
-    private fun grouping(stats: List<AppStatistics>): List<AppStatisticsModel> {
-        val map = mutableMapOf<AppStatisticsModel, MutableList<AppStatistics>>()
-        stats.forEach({
-            val model = AppStatisticsModel(it.getPersianYear(), it.getPersianWeek())
-            if (!map.contains(model))
-                map.put(model, mutableListOf())
+    private fun groupingAndSort(stats: List<AppStatistics>) : List<AppStatisticsModel> {
+        val grouped = mutableListOf<AppStatisticsModel>();
+        stats.groupBy { Pair(it.getPersianYear(), it.getPersianWeek()) }
+             .mapValues {Triple(it.value.sumBy { it.getRequests() },it.value.sumBy { it.getClicks() },it.value.sumBy { it.getInstalls() })}
+             .forEach { k, v -> grouped.add(AppStatisticsModel(k.first, k.second, v.first, v.second, v.third)) }
 
-            map.get(model)?.add(it)
-        })
-
-        var groups = mutableListOf<AppStatisticsModel>()
-        map.forEach({(key, values) ->
-            values.forEach { key.add(it) }
-            groups.add(key)
-        })
-        return groups
+        return grouped.sorted();
     }
 
 }
